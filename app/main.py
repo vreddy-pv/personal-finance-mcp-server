@@ -11,14 +11,15 @@ BASE_URL = "http://localhost:8080"
 AUTH_TOKEN = None
 
 @app.tool()
-async def register(username: str, email: str, password: str) -> str:
+async def register(username: str, email: str, password: str, role: str = "USER") -> str:
     """Registers a new user and logs them in."""
     global AUTH_TOKEN
     async with httpx.AsyncClient() as client:
         payload = {
             "username": username,
             "email": email,
-            "password": password
+            "password": password,
+            "role": role
         }
         res = await client.post(f"{BASE_URL}/api/auth/register", json=payload)
         if res.status_code == 200:
@@ -170,5 +171,17 @@ async def delete_transaction(transaction_id: int) -> str:
         res.raise_for_status()
         return "Transaction deleted successfully."
 
+@app.tool()
+async def delete_user(username: str) -> str:
+    """Deletes a user."""
+    if not AUTH_TOKEN:
+        return "You must be logged in to perform this action. Use the 'login' tool."
+    headers = {"Authorization": f"Bearer {AUTH_TOKEN}"}
+    async with httpx.AsyncClient(headers=headers) as client:
+        res = await client.delete(f"{BASE_URL}/api/users/{username}")
+        res.raise_for_status()
+        return "User deleted successfully."
+
 if __name__ == "__main__":
-    app.run(transport="http", host="127.0.0.1", port=8000, stateless=True)
+    #app.run(transport="http", host="127.0.0.1", port=8000, stateless=True)
+    app.run()
