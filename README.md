@@ -10,17 +10,12 @@ This module acts as a bridge between the user and the `personal-finance-service`
 ### Installation
 To install the required dependencies, run the following command in this directory:
 ```bash
-sh scripts/install-mcp.sh
+pip install -r requirements.txt
 ```
 
 ### Running the Server
 To start the MCP server, run the following command:
 ```bash
-sh scripts/start-mcp.sh
+uvicorn app.main:app --reload
 ```
 The server will be available at `http://localhost:8000`.
-
-## Scripts
-
-- `scripts/install-mcp.sh`: Installs the Python dependencies for the MCP server.
-- `scripts/start-mcp.sh`: Starts the Uvicorn server for the MCP application.
